@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digger</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__title">Digger</div>
+        <div class="brand__subtitle">watch dwarfs dig & haul minerals</div>
+      </div>
+
+      <div class="resources" id="resources"></div>
+
+      <div class="actions">
+        <button id="hireBtn" class="btn btn--gold" disabled>
+          Auto-hiring dwarfs (100 gold)
+        </button>
+        <button id="resetBtn" class="btn">Reset world</button>
+      </div>
+    </header>
+
+    <main class="stage">
+      <canvas id="game"></canvas>
+      <div class="hud" id="hud"></div>
+    </main>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
+
+
