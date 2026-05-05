@@ -10,8 +10,8 @@ const RES_META = {
   [RES.DIAMOND]: { key: "diamond", name: "Diamond", color: "#71f1ff", value: 16 },
 };
 
-const WORLD_W = 110;
-const WORLD_H = 72;
+const WORLD_W = 96;
+const WORLD_H = 64;
 const BASE_X = Math.floor(WORLD_W / 2);
 const BASE_Y = 0;
 const START_DWARFS = 4;
@@ -72,7 +72,7 @@ function createDwarf() {
     id: nextDwarfId++,
     x: BASE_X, y: BASE_Y, fx: BASE_X, fy: BASE_Y,
     state: "dig", bagCap, bagCount: 0, bag: makeTotals(),
-    digTimer: 0, path: null, pathAt: 0, mood: 1 + Math.random() * 0.3,
+    digTimer: 0, path: null, pathAt: 0, mood: 1 + Math.random() * 0.3, thinkCooldown: 0, target: null,
   };
 }
 
@@ -179,7 +179,12 @@ function tick(dt) {
 
     if (d.bagCount >= d.bagCap) { d.state = "return"; d.path = null; continue; }
 
-    const target = nearestDigTarget(d);
+    d.thinkCooldown -= dt;
+    if (!d.target || d.thinkCooldown <= 0) {
+      d.target = nearestDigTarget(d);
+      d.thinkCooldown = 0.35;
+    }
+    const target = d.target;
     if (target?.path?.length > 1) {
       const step = target.path[1]; d.x = step.x; d.y = step.y;
       if (Math.abs(d.x - target.x) + Math.abs(d.y - target.y) === 1) {
@@ -188,6 +193,7 @@ function tick(dt) {
           d.digTimer = 0;
           const t = getCell(target.x, target.y);
           if (t !== RES.EMPTY) { addToBag(d, t); setCell(target.x, target.y, RES.EMPTY); }
+          d.target = null;
         }
       }
     }
@@ -247,8 +253,8 @@ function bindButtons() {
   actions.innerHTML = "";
   const mk = (txt, fn, cls="btn") => { const b = document.createElement("button"); b.className = cls; b.textContent = txt; b.onclick = fn; actions.appendChild(b); return b; };
   mk("Hire dwarf", () => hireDwarf(), "btn btn--gold");
-  mk(paused ? "Resume" : "Pause", () => paused = !paused);
-  mk(gameSpeed === 1 ? "Speed x1" : gameSpeed === 2 ? "Speed x2" : "Speed x4", () => gameSpeed = gameSpeed === 1 ? 2 : gameSpeed === 2 ? 4 : 1);
+  mk(paused ? "Resume" : "Pause", () => { paused = !paused; bindButtons(); });
+  mk(gameSpeed === 1 ? "Speed x1" : gameSpeed === 2 ? "Speed x2" : "Speed x4", () => { gameSpeed = gameSpeed === 1 ? 2 : gameSpeed === 2 ? 4 : 1; bindButtons(); });
   mk("Reset world", resetGame);
 }
 
@@ -287,7 +293,7 @@ function frame(now) {
     simAcc += dt * gameSpeed;
     while (simAcc >= 0.1) { tick(0.1); simAcc -= 0.1; }
   }
-  drawWorld(); renderResourceBar(); updateHUD(); bindButtons();
+  drawWorld(); renderResourceBar(); updateHUD();
   requestAnimationFrame(frame);
 }
 
