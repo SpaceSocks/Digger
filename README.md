@@ -1,26 +1,27 @@
-# Digger (watchable dwarf digging sim)
+# Digger (Overhauled Edition)
 
-A simple visual digging simulation/game: dwarfs dig into the ground, collect minerals until their bag is full, then return to the surface base to deposit resources. New dwarfs are hired automatically once you have enough gold.
+A significantly upgraded browser digging simulation featuring:
+
+- **Improved graphics** (depth shading, ambience, miner lantern glow)
+- **Better UI** (resource pills, control bar, live upgrade panel)
+- **Upgraded logic** (credit economy, smart target selection, progression upgrades)
+- **Simulation controls** (pause, speed toggle, manual hiring)
 
 ## Run
 
-- **Fastest**: double-click `index.html` (works in most browsers).
-- If your browser blocks local file access, run a tiny local server from this folder:
-
 ```bash
-# Python
 python -m http.server 5173
 ```
 
-Then open `http://localhost:5173`.
+Open <http://localhost:5173>.
 
-## Controls
+## Gameplay loop
 
-- **Reset world**: regenerates the underground.
-
-## Notes
-
-- Resources: **Stone, Coal, Iron, Gold, Diamond**
-- Gold is both a tracked resource and the currency for hiring.
-
-
+1. Dwarfs mine resources and haul them to base.
+2. Deposits convert to **Credits**.
+3. Spend credits on hiring and upgrades:
+   - Auto Hire
+   - Bigger Bags
+   - Steel Picks
+   - Lanterns
+4. Push deeper and scale your mining colony.
